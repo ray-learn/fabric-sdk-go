@@ -4,28 +4,28 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Supported Targets:
-# all : runs unit and integration tests
-# depend: installs test dependencies
-# unit-test: runs all the unit tests
-# integration-test: runs all the integration tests
-# checks: runs all check conditions (license, spelling, linting)
-# clean: stops docker conatainers used for integration testing
-# mock-gen: generate mocks needed for testing (using mockgen)
-# channel-config-[codelevel]-gen: generates the channel configuration transactions and blocks used by tests
-# populate: populates generated files (not included in git) - currently only vendor
-# populate-vendor: populate the vendor directory based on the lock
-# clean-populate: cleans up populated files (might become part of clean eventually)
-# thirdparty-pin: pulls (and patches) pinned dependencies into the project under internal
+# Supported Targets: 支持的目标
+# all : runs unit and integration tests 运行单元和集成测试
+# depend: installs test dependencies 安装测试以来
+# unit-test: runs all the unit tests 运行所有单元测试
+# integration-test: runs all the integration tests 运行所有集成测试
+# checks: runs all check conditions (license, spelling, linting) 运行所有检查
+# clean: stops docker conatainers used for integration testing 停止docker容器
+# mock-gen: generate mocks needed for testing (using mockgen) 生成用于测试的mocks
+# channel-config-[codelevel]-gen: generates the channel configuration transactions and blocks used by tests 生成测试使用的通道配置交易和区块
+# populate: populates generated files (not included in git) - currently only vendor 操作生成的文件
+# populate-vendor: populate the vendor directory based on the lock 基于锁操作vendor目录
+# clean-populate: cleans up populated files (might become part of clean eventually) 清楚操作的文件
+# thirdparty-pin: pulls (and patches) pinned dependencies into the project under internal 拉去和补全项目依赖
 #
 
-# Tool commands (overridable)
+# Tool commands (overridable) 工具命令
 GO_CMD             ?= go
 GO_DEP_CMD         ?= dep
 DOCKER_CMD         ?= docker
 DOCKER_COMPOSE_CMD ?= docker-compose
 
-# Fabric versions used in the Makefile
+# Fabric versions used in the Makefile Fabric版本
 FABRIC_STABLE_VERSION           := 1.3.0
 FABRIC_STABLE_VERSION_MINOR     := 1.3
 FABRIC_STABLE_VERSION_MAJOR     := 1
@@ -37,7 +37,7 @@ FABRIC_DEVSTABLE_VERSION_MINOR  := 1.3
 FABRIC_DEVSTABLE_VERSION_MAJOR  := 1
 FABRIC_PREV_VERSION_MINOR       := 1.2
 
-# Build flags (overridable)
+# Build flags (overridable) 构建标志
 GO_LDFLAGS                 ?=
 GO_TESTFLAGS               ?=
 GO_TESTFLAGS_UNIT          ?= $(GO_TESTFLAGS)
@@ -49,11 +49,11 @@ FABRIC_SDK_CHAINCODED      ?= false
 FABRIC_SDKGO_TEST_CHANGED  ?= false
 FABRIC_SDKGO_TESTRUN_ID    ?= $(shell date +'%Y%m%d%H%M%S')
 
-# Fabric tool versions (overridable)
+# Fabric tool versions (overridable) Fabric工具版本
 FABRIC_TOOLS_VERSION ?= $(FABRIC_STABLE_VERSION)
 FABRIC_BASE_VERSION  ?= $(FABRIC_BASEIMAGE_STABLE_VERSION)
 
-# Fabric base docker image (overridable)
+# Fabric base docker image (overridable) Fabric基本docker镜像
 FABRIC_BASE_IMAGE   ?= hyperledger/fabric-baseimage
 FABRIC_BASE_TAG     ?= $(FABRIC_ARCH)-$(FABRIC_BASE_VERSION)
 
@@ -61,24 +61,24 @@ FABRIC_BASE_TAG     ?= $(FABRIC_ARCH)-$(FABRIC_BASE_VERSION)
 FABRIC_TOOLS_IMAGE ?= hyperledger/fabric-tools
 FABRIC_TOOLS_TAG   ?= $(FABRIC_ARCH)-$(FABRIC_TOOLS_VERSION)
 
-# Fabric docker registries (overridable)
+# Fabric docker registries (overridable) Fabric docker注册
 FABRIC_RELEASE_REGISTRY     ?=
 FABRIC_DEV_REGISTRY         ?= nexus3.hyperledger.org:10001
 FABRIC_DEV_REGISTRY_PRE_CMD ?= docker login -u docker -p docker nexus3.hyperledger.org:10001
 
-# Upstream fabric patching (overridable)
+# Upstream fabric patching (overridable) 上游fabric补丁
 THIRDPARTY_FABRIC_CA_BRANCH ?= master
 THIRDPARTY_FABRIC_CA_COMMIT ?= v1.3.0
 THIRDPARTY_FABRIC_BRANCH    ?= master
 THIRDPARTY_FABRIC_COMMIT    ?= v1.3.0
 
-# Force removal of images in cleanup (overridable)
+# Force removal of images in cleanup (overridable) 强制移除镜像
 FIXTURE_DOCKER_REMOVE_FORCE ?= false
 
-# Options for exercising unit tests (overridable)
+# Options for exercising unit tests (overridable) 单元测试选项
 FABRIC_SDK_DEPRECATED_UNITTEST ?= false
 
-# Code levels to exercise integration/e2e tests against (overridable)
+# Code levels to exercise integration/e2e tests against (overridable) 代码级别的集成/e2e测试
 FABRIC_STABLE_INTTEST          ?= true
 FABRIC_STABLE_PKCS11_INTTEST   ?= false
 FABRIC_STABLE_NEGATIVE_INTTEST ?= false
@@ -88,14 +88,14 @@ FABRIC_DEVSTABLE_INTTEST       ?= false
 FABRIC_STABLE_LOCAL_INTTEST    ?= false
 FABRIC_DEVSTABLE_LOCAL_INTTEST ?= false
 
-# Code levels
+# Code levels 代码级别
 FABRIC_STABLE_CODELEVEL_TAG     := stable
 FABRIC_PREV_CODELEVEL_TAG       := prev
 FABRIC_PRERELEASE_CODELEVEL_TAG := prerelease
 FABRIC_DEVSTABLE_CODELEVEL_TAG  := devstable
 FABRIC_CODELEVEL_TAG            ?= $(FABRIC_STABLE_CODELEVEL_TAG)
 
-# Code level version targets
+# Code level version targets 代码级别的版本目标
 FABRIC_STABLE_CODELEVEL_VER     := v$(FABRIC_STABLE_VERSION_MINOR)
 FABRIC_PREV_CODELEVEL_VER       := v$(FABRIC_PREV_VERSION_MINOR)
 FABRIC_PRERELEASE_CODELEVEL_VER := v$(FABRIC_PRERELEASE_VERSION)
@@ -103,11 +103,11 @@ FABRIC_DEVSTABLE_CODELEVEL_VER  := v$(FABRIC_DEVSTABLE_VERSION_MINOR)
 FABRIC_CODELEVEL_VER            ?= $(FABRIC_STABLE_CODELEVEL_VER)
 FABRIC_CRYPTOCONFIG_VER         ?= v$(FABRIC_STABLE_VERSION_MAJOR)
 
-# Code level to exercise during unit tests
+# Code level to exercise during unit tests 单元测试的代码级别
 FABRIC_CODELEVEL_UNITTEST_TAG ?= $(FABRIC_STABLE_CODELEVEL_TAG)
 FABRIC_CODELEVEL_UNITTEST_VER ?= $(FABRIC_STABLE_CODELEVEL_VER)
 
-# Local variables used by makefile
+# Local variables used by makefile 局部变量
 PACKAGE_NAME           := github.com/hyperledger/fabric-sdk-go
 ARCH                   := $(shell uname -m)
 OS_NAME                := $(shell uname -s)
@@ -117,7 +117,7 @@ THIS_PATH              := $(patsubst %/,%,$(dir $(abspath $(MAKEFILE_THIS))))
 TEST_SCRIPTS_PATH      := test/scripts
 SOCAT_DOCKER_IMG       := $(shell docker images -q fabsdkgo-socat 2> /dev/null)
 
-# Test fixture paths
+# Test fixture paths 测试套件路径
 FIXTURE_SCRIPTS_PATH      := $(THIS_PATH)/test/scripts
 FIXTURE_DOCKERENV_PATH    := $(THIS_PATH)/test/fixtures/dockerenv
 FIXTURE_CRYPTOCONFIG_PATH := $(THIS_PATH)/test/fixtures/fabric/$(FABRIC_CRYPTOCONFIG_VER)/crypto-config
@@ -138,13 +138,13 @@ ifneq ($(FABRIC_DEV_REGISTRY),)
 FABRIC_DEV_REGISTRY := $(FABRIC_DEV_REGISTRY)/
 endif
 
-# Fabric tool docker tags at code levels
+# Fabric tool docker tags at code levels Fabric工具，docker标签，代码级别
 FABRIC_TOOLS_STABLE_TAG     = $(FABRIC_ARCH)-$(FABRIC_STABLE_VERSION)
 FABRIC_TOOLS_PREV_TAG       = $(FABRIC_ARCH)-$(FABRIC_PREV_VERSION)
 FABRIC_TOOLS_PRERELEASE_TAG = $(FABRIC_ARCH)-$(FABRIC_PRERELEASE_VERSION)
 FABRIC_TOOLS_DEVSTABLE_TAG  := stable
 
-# The version of dep that will be installed by depend (or in the CI)
+# The version of dep that will be installed by depend (or in the CI) dep版本
 GO_DEP_COMMIT := v0.5.0
 
 # Detect CI
@@ -221,7 +221,7 @@ DOCKER_COMPOSE_UP_BACKGROUND_FLAGS := $(DOCKER_COMPOSE_UP_FLAGS) -d
 DOCKER_COMPOSE_UP_STANDALONE_FLAGS := $(DOCKER_COMPOSE_UP_FLAGS)
 DOCKER_COMPOSE_PULL_FLAGS :=
 
-# Global environment exported for scripts
+# Global environment exported for scripts 全局变量
 export GO_CMD
 export GO_DEP_CMD
 export ARCH
